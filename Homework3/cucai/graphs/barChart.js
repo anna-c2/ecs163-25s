@@ -1,3 +1,4 @@
+// determine price range given the price
 function getPriceRange(price) {
   if (price <= 20) return "<= $20";
   if (price <= 40) return "$20-40";
@@ -139,12 +140,14 @@ d3.csv("cosmetics.csv").then(rawData => {
     
     // Remove bars that are no longer needed/out of view
     bars.exit().transition(t).attr("height", 0).remove();
-  
+    
+    // Enter bars that don't have a <rect> element yet
     const barsEnter = bars.enter().append("rect")
       .attr("y", y(0))
       .attr("height", 0)
       .attr("fill", d => color(d.category));
-  
+    
+    // update existing and new bars uniformly
     barsEnter.merge(bars)
       .transition(t)
       .delay((d, i) => i * 100)
@@ -168,6 +171,7 @@ d3.csv("cosmetics.csv").then(rawData => {
     updateChart(currentOrder, false, event.transform); 
   }
 
+  // reorder the bars when the selected order changes
   d3.select("#order").on("change", function () {
     const selectedOrder = d3.select(this).property("value");
     // Reset zoom and then animate update
