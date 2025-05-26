@@ -1,0 +1,79 @@
+<!-- this dashboard intends to explore the price range of cosmetic products
+  in terms of their characteristics like product type, product rating, suitable skin type, 
+  and SPF contents -->
+<!-- References
+ https://d3-graph-gallery.com/graph/barplot_stacked_basicWide.html
+ https://d3-graph-gallery.com/graph/heatmap_basic.html
+ https://d3-graph-gallery.com/sankey.html
+ https://gist.github.com/d3noob/06e72deea99e7b4859841f305f63ba85
+ https://observablehq.com/@d3/zoomable-bar-chart?collection=@d3/d3-zoom
+ https://observablehq.com/d/553a79bf49b4351a
+
+ CHATGPT for specific syntax questions and features like the legend for heatmap,
+  guidance on incorporating both animation + zoom-in scale on barchart, and syntax for
+  selection feature on sankey diagram
+  -->
+
+  <!doctype html>
+  <html style="width:100%;height:100%;">
+  <head>
+      <meta charset="utf-8">
+      <meta name="description" content="">
+      <title>Cosmetics Data</title>
+  </head>
+  <body style="width:100%;height:100%; margin:0px;">
+      <div style="display: flex; gap: 10px;">
+        <!-- sankey diagram -->
+        <div style="border: 1px black solid; max-height: 100vh;" >
+            <svg id="sankey"></svg>
+            <p><em>Select node to see incoming and outgoing connections. Click on node again to deselect. 
+                You may select multiple modes. Select or unselect all nodes by clicking on buttons below. Refresh the page to return to default.</em></p>
+            <button id="selectNodes" value="selectAll">Select All</button>
+            <button id="unselectNodes" value="unselectAll">Unselect All</button>
+        </div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <!-- heatmap -->
+              <svg style="border: 1px rgb(186, 180, 180) solid; padding: 5px;" id="heatmap"></svg>
+              <!-- bar chart -->
+              <div style="border: 1px rgb(186, 180, 180) solid; width: 500px">
+                <!-- allow users to select sorting options -->
+                <select style="width: fit-content;" id="order">
+                    <option value="default">Default</option>
+                    <option value="asc">SPF Ascending</option>
+                    <option value="desc">SPF Descending</option>
+                </select>
+                <svg id="barChart"></svg>
+                <p><em>To zoom in and rescale x-axis, you must start off by hovering above a bar. Select ordering based on number of SPF products at a price range at top left corner dropdown.</em></p>
+            </div>
+          </div>
+      </div>
+      <script src="https://d3js.org/d3.v7.min.js"></script>
+  
+      <script src="https://cdn.jsdelivr.net/npm/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+      <script src="graphs/sankey.js"></script>
+      <script src="graphs/heatmap.js"></script>
+      <script src="graphs/barChart.js"></script>
+      <script>
+  
+      </script>
+  </body>
+  </html>
+
+  <style>
+    div{
+        padding: 5px;
+    }
+    /* default opacity for sankey connections */
+    .link {
+        stroke-opacity: 0.4;
+    }
+    /* opacity for sankey connections of selected nodes*/
+    .link.highlight {
+        stroke-opacity: 0.7;
+    }
+    /* opacity for sankey connections of unselected nodes*/
+    .link.hidden {
+        stroke-opacity: 0.2;
+        stroke: #ccc;
+    }
+  </style>
