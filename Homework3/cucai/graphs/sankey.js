@@ -127,9 +127,15 @@ d3.csv("cosmetics.csv").then(rawData => {
     };
 
     // select sankey svg in html file
+    const svgWidth = width + margin.left + margin.right;
+    const svgHeight = height + margin.top + margin.bottom;
+
+    //responsive resizing of chart
     const svg = d3.select("#sankey")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom);
+        .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`)
+        .attr("preserveAspectRatio", "xMidYMid meet")
+        .style("width", "100%")
+        .style("height", "auto")
         
     // display title
     svg.append("text")
@@ -228,6 +234,7 @@ d3.csv("cosmetics.csv").then(rawData => {
         .attr("text-anchor", "end")
         .style("font-weight", "bold");
 // ----------END OF LABELS FOR CATEGORIES------------
+    // update the class of each node depending on if it's selected or not
     function updateSelected() {
         linkSelection
             .classed("highlight", d => selectedNodes.has(d.source.name) || selectedNodes.has(d.target.name))

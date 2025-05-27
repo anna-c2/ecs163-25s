@@ -4,14 +4,21 @@ var margin = {top: 30, right: 30, bottom: 70, left: 100},
     height = 300 - margin.top - margin.bottom;
 
 // Selects the heatmap svg in html file
-var svg = d3.select("#heatmap")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+const svgWidth = width + margin.left + margin.right;
+const svgHeight = height + margin.top + margin.bottom;
+
+//responsive resizing of chart
+const svg = d3.select("#heatmap")
+    .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`)
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .style("width", "100%")
+    .style("height", "auto");
+
+const chartGroup = svg.append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
 
     // Display title
-    svg.append("text")
+    chartGroup.append("text")
         .attr("x", width / 2)
         .attr("y", -10) 
         .attr("text-anchor", "middle")
@@ -31,13 +38,13 @@ var x = d3.scaleBand()
     .padding(0.01);
 
 // Display x axis
-svg.append("g")
+chartGroup.append("g")
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(x))
     .attr("color", "black");
 
 // Label x axis 
-svg.append("text")
+chartGroup.append("text")
     .attr("x", width / 2)
     .attr("y", height + 60) 
     .attr("text-anchor", "middle")
@@ -51,11 +58,11 @@ var y = d3.scaleBand()
     .padding(0.01);
 
 // Display y axis
-svg.append("g")
+chartGroup.append("g")
     .call(d3.axisLeft(y));
 
 // Label y axis
-svg.append("text")
+chartGroup.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", -65) 
     .attr("x", -height / 2)
@@ -147,17 +154,17 @@ d3.csv("cosmetics.csv").then(rawData => {
     );
 
     // display the rectangles that make up the heat map
-    svg.selectAll("rect")
-      .data(aggregated)
-      .enter()
-      .append("rect")
-      .attr("x", d => x(d.skin))
-      .attr("y", d => y(d.price))
-      .attr("width", x.bandwidth())
-      .attr("height", y.bandwidth())
-      .style("fill", d => myColor(d.count))
-      .attr("stroke", "black")
-      .attr("stroke-width", 0);
+    chartGroup.selectAll("rect")
+        .data(aggregated)
+        .enter()
+        .append("rect")
+        .attr("x", d => x(d.skin))
+        .attr("y", d => y(d.price))
+        .attr("width", x.bandwidth())
+        .attr("height", y.bandwidth())
+        .style("fill", d => myColor(d.count))
+        .attr("stroke", "black")
+        .attr("stroke-width", 0);
 
     // Legend dimensions
     const legendHeight = 150;
@@ -168,42 +175,42 @@ d3.csv("cosmetics.csv").then(rawData => {
 
     // display color gradient in legend
     const linearGradient = defs.append("linearGradient")
-    .attr("id", "legend-gradient")
-    .attr("x1", "0%")
-    .attr("y1", "100%")
-    .attr("x2", "0%")
-    .attr("y2", "0%");
+        .attr("id", "legend-gradient")
+        .attr("x1", "0%")
+        .attr("y1", "100%")
+        .attr("x2", "0%")
+        .attr("y2", "0%");
 
     linearGradient.selectAll("stop")
-    .data([
-        { offset: "0%", color: myColor(100) },
-        { offset: "100%", color: myColor(300) }
-    ])
-    .enter().append("stop")
-    .attr("offset", d => d.offset)
-    .attr("stop-color", d => d.color);
+        .data([
+            { offset: "0%", color: myColor(100) },
+            { offset: "100%", color: myColor(300) }
+        ])
+        .enter().append("stop")
+        .attr("offset", d => d.offset)
+        .attr("stop-color", d => d.color);
 
     // display the legend scale
-    svg.append("rect")
-    .attr("x", width + 30)
-    .attr("y", 10)
-    .attr("width", legendWidth)
-    .attr("height", legendHeight)
-    .style("fill", "url(#legend-gradient)");
+    chartGroup.append("rect")
+        .attr("x", width + 30)
+        .attr("y", 10)
+        .attr("width", legendWidth)
+        .attr("height", legendHeight)
+        .style("fill", "url(#legend-gradient)");
 
     // display labels for legend
-    svg.append("text")
-    .attr("x", width + 50)
-    .attr("y", 20)
-    .attr("text-anchor", "start")
-    .style("font-size", "10px")
-    .text("300+ Products");
+    chartGroup.append("text")
+        .attr("x", width + 50)
+        .attr("y", 20)
+        .attr("text-anchor", "start")
+        .style("font-size", "10px")
+        .text("300+ Products");
 
-    svg.append("text")
-    .attr("x", width + 50)
-    .attr("y", 10 + legendHeight)
-    .attr("text-anchor", "start")
-    .style("font-size", "10px")
-    .text("< 100 Products");
+    chartGroup.append("text")
+        .attr("x", width + 50)
+        .attr("y", 10 + legendHeight)
+        .attr("text-anchor", "start")
+        .style("font-size", "10px")
+        .text("< 100 Products");
 
 }); 

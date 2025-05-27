@@ -12,9 +12,13 @@ const barPriceRanges = ["<= $20", "$20-40", "$40-60", "$60-80", "$80-100", "$100
 const categories = ["SPF", "NonSPF"];
 const barProducts = {};
 let currentOrder = "default";
+// for each price range, initialize spf and nonspf count to 0
 barPriceRanges.forEach(r => barProducts[r] = { SPF: 0, NonSPF: 0 });
 
+// process data
 d3.csv("cosmetics.csv").then(rawData => {
+  
+  // for each product, determine if it is a spf product and add to sum 
   rawData.forEach(product => {
     const range = getPriceRange(+product.Price);
     if (product.Name.includes("SPF")) {
@@ -41,13 +45,19 @@ d3.csv("cosmetics.csv").then(rawData => {
 
   // Set the dimensions and margins of the graph
   const margin = { top: 30, right: 30, bottom: 50, left: 60 };
-  const width = 500 - margin.left - margin.right;
+  const width = 700 - margin.left - margin.right;
   const height = 300 - margin.top - margin.bottom;
 
   // Select the heatmap svg in html file
+  const svgWidth = width + margin.left + margin.right;
+  const svgHeight = height + margin.top + margin.bottom;
+  
+  //responsive resizing of chart
   const svg = d3.select("#barChart")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom);
+    .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`)
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .style("width", "100%")
+    .style("height", "auto");
 
   const chartGroup = svg.append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -69,6 +79,7 @@ d3.csv("cosmetics.csv").then(rawData => {
     .nice()
     .range([height, 0]);
 
+  // set colors for the nonspf and spf bars
   const color = d3.scaleOrdinal()
     .domain(categories)
     .range(["#735751", "#b69121"]);
@@ -77,7 +88,7 @@ d3.csv("cosmetics.csv").then(rawData => {
   const barsGroup = chartGroup.append("g")
     .attr("class", "bars")
   
-  // Create   
+  // Create axis
   const xAxisGroup = chartGroup.append("g")
   .attr("class", "x-axis")
   .attr("transform", `translate(0,${height})`);
@@ -167,6 +178,7 @@ d3.csv("cosmetics.csv").then(rawData => {
     .extent([[0, 0], [width, height]])
     .on("zoom", handleZoom);
 
+  // respond to zoom event
   function handleZoom(event) {
     updateChart(currentOrder, false, event.transform); 
   }

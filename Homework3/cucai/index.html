@@ -10,7 +10,8 @@
  https://observablehq.com/d/553a79bf49b4351a
  https://stackoverflow.com/questions/64427922/d3-js-sankey-chart-how-can-i-highlight-the-set-of-links-coming-from-a-node
  https://observablehq.com/@ahmedhammeda/how-to-create-a-zoomable-and-animated-bar-chart-with-d3-js
- 
+ https://chartio.com/resources/tutorials/how-to-resize-an-svg-when-the-window-is-resized-in-d3-js/
+ https://stackoverflow.com/questions/13632169/using-viewbox-to-resize-svg-depending-on-the-window-size
 
  CHATGPT for specific syntax questions and features like the legend for heatmap,
   guidance on incorporating both animation + zoom-in scale on barchart, and syntax for
@@ -27,7 +28,7 @@
   <body style="width:100%;height:100%; margin:0px;">
       <div style="display: flex; gap: 10px;">
         <!-- sankey diagram -->
-        <div style="border: 1px black solid; max-height: 100vh;" >
+        <div style="border: 1px black solid;" >
             <svg id="sankey"></svg>
             <p><em>Select node to see incoming and outgoing connections. Click on node again to deselect. 
                 You may select multiple modes. Select or unselect all nodes by clicking on buttons below. Refresh the page to return to default.</em></p>
@@ -38,7 +39,7 @@
             <!-- heatmap -->
               <svg style="border: 1px rgb(186, 180, 180) solid; padding: 5px;" id="heatmap"></svg>
               <!-- bar chart -->
-              <div style="border: 1px rgb(186, 180, 180) solid; width: 500px">
+              <div style="border: 1px rgb(186, 180, 180) solid;">
                 <!-- allow users to select sorting options -->
                 <select style="width: fit-content;" id="order">
                     <option value="default">Default</option>
